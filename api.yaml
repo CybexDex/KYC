@@ -1,0 +1,355 @@
+swagger: '2.0'
+info:
+  title: Notify API
+  description: Exposes publisher calls 
+  version: '1'
+schemes:
+  - http
+  - https
+produces:
+  - application/json
+paths:
+  "/genCode":
+    get:
+      description: Register topic for pub
+      operationId: api.explorer.genCode
+      parameters:
+        - in: query
+          name: account
+          default: "nathan"
+          type: string
+          required: true
+          description: account
+      responses:
+        '200':
+          description: genCode
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+      produces:
+        - application/json
+  "/sendVerifyCode":
+    get:
+      description: Register topic for pub
+      operationId: api.explorer.sendVerifyCode
+      parameters:
+        - in: query
+          name: code
+          default: "090990"
+          type: string
+          required: true
+          description: code
+        - in: query
+          name: dest
+          default: "qi.sun@cybex.io"
+          type: string
+          required: true
+          description: dest
+        - in: query
+          name: ttype
+          default: "qi.sun@cybex.io"
+          type: integer
+          required: true
+          description: 0->email, 1->phone
+      responses:
+        '200':
+          description: sendVerifyCode
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+      produces:
+        - application/jso
+
+  "/verifyCode":
+    get:
+      description: Register topic for pub
+      operationId: api.explorer.verifyCode
+      parameters:
+        - in: query
+          name: code
+          default: "909090"
+          type: string
+          required: true
+          description: code
+        - in: query
+          name: account
+          default: "nathan"
+          type: string
+          required: true
+          description: account name
+      responses:
+        '200':
+          description: verifyCode
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+      produces:
+        - application/json
+  "/getKYC":
+    get:
+      description: Register topic for pub
+      operationId: api.explorer.getKYC
+      parameters:
+        - in: query
+          name: account
+          default: "nathan"
+          type: string
+          required: true
+          description: account 
+      responses:
+        '200':
+          description: getKYC
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+      produces:
+        - application/json
+  "/kycCreate":
+    post:
+      description: Register topic for pub
+      operationId: api.explorer.kycCreate
+      parameters:
+        - in: body
+          name: data
+          required: true
+          description: JSON you want to get
+          schema:
+            $ref: '#/definitions/Post'
+      responses:
+        '200':
+          description: kycCreate
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+      produces:
+        - application/json
+
+  "/kycRmv":
+    get:
+      description: Register topic for pub
+      operationId: api.explorer.kycRmv
+      parameters:
+        - in: query
+          name: account
+          default: "nathan"
+          type: string
+          required: true
+          description: account to rmv
+      responses:
+        '200':
+          description: remove from kyc
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+      produces:
+        - application/json
+
+
+  "/kycUpd":
+    post:
+      description: Register topic for pub
+      operationId: api.explorer.kycUpd
+      parameters:
+        - in: body
+          name: data
+          required: true
+          description: JSON you want to get
+          schema:
+            $ref: '#/definitions/Post'
+      responses:
+        '200':
+          description: update kyc
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+      produces:
+        - application/json
+
+  "/get_account":
+    get:
+      description: Register topic for pub
+      operationId: api.explorer.get_account
+      parameters:
+        - in: query
+          name: account
+          default: "nathan"
+          type: string
+          required: true
+          description: account to rmv
+      responses:
+        '200':
+          description: remove from kyc
+        '500':
+          description: Error processing parameters
+      tags:
+        - api
+      produces:
+        - application/json
+
+
+  "/register":
+    post:
+      description: Register topic for pub
+      operationId: api.explorer.register
+      parameters:
+        - in: body
+          name: obj
+          required: true
+          schema:
+            $ref: '#/definitions/Content'
+      responses:
+        '200':
+          description: Registered
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+
+
+  "/is_sucess":
+    get:
+      description: Register topic for pub
+      operationId: api.explorer.is_success
+      parameters:
+        - in: query
+          name: account
+          required: true
+          type: string
+          description: account string
+        - in: query
+          name: accid
+          required: true
+          type: string
+          description: accid string
+      responses:
+        '200':
+          description: Registered
+        '500':
+          description: Error processing parameters
+      tags:
+        - api
+  "/finalize_kyc":
+    get:
+      description: Register topic for pub
+      operationId: api.explorer.finalize_kyc
+      parameters:
+        - in: query
+          name: account
+          required: true
+          type: string
+          description: account string
+      responses:
+        '200':
+          description: Registered
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+
+
+
+definitions:
+  Content:
+    required:
+      - name
+      - email
+      - phone
+      - owner_key
+      - active_key
+      - memo_key
+      - new
+    properties:
+      name:
+        type: string
+        description: a
+      email:
+        type: string
+        description: a
+      phone:
+        type: string
+        description: a
+      owner_key:
+        type: string
+        description: a
+      active_key:
+        type: string
+        description: a
+      memo_key:
+        type: string
+        description: a
+      new:
+        type: boolean
+        description: a
+  Post:
+    required:
+      - email
+      - phone
+      - name
+      - accid
+    properties:
+      email:
+        type: string
+        description: email
+      phone:
+        type: string
+        description: phone
+      name:
+        type: string
+        description: The account name
+      accid:
+        type: string
+        description: The account id
+  SuccessResponse:
+    required:
+      - service
+    properties:
+      service:
+        type: string
+  ErrorResponse:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
