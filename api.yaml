@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  title: Notify API
+  title: KYC API
   description: Exposes publisher calls 
   version: '1'
 schemes:
