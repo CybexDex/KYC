@@ -9,6 +9,105 @@ schemes:
 produces:
   - application/json
 paths:
+  "/register_constrain":
+    get:
+      description: Register topic for pub
+      operationId: api.explorer.register_constrain
+      parameters:
+        - in: query
+          name: schema
+          default: "email"
+          type: string
+          required: true
+          description: schemas saparate with ,
+      responses:
+        '200':
+          description: schema
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+      produces:
+        - application/json
+
+  "/build_tx":
+    get:
+      description: Register topic for pub
+      operationId: api.explorer.build_tx
+      parameters:
+        - in: query
+          name: account
+          default: "sunxiaoqi-11"
+          type: string
+          required: true
+          description: account name to create
+        - in: query
+          name: WIF
+          default: "5KWTrrQMyD7Ez62viB36r75ur9ZJ6DPu3qkSa2eDcpE99XfD8ye"
+          type: string
+          required: true
+          description: priv key
+      responses:
+        '200':
+          description: view_constrains
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+      produces:
+        - application/json
+
+
+  "/view_constrains":
+    get:
+      description: Register topic for pub
+      operationId: api.explorer.view_constrains
+      parameters:
+        - in: query
+          name: token
+          default: "123456"
+          type: string
+          required: true
+          description: token
+      responses:
+        '200':
+          description: view_constrains
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+      produces:
+        - application/json
+
+  "/unregister_contrain":
+    get:
+      description: Register topic for pub
+      operationId: api.explorer.unregister_contrain
+      parameters:
+        - in: query
+          name: k
+          default: "1563334118"
+          type: string
+          required: true
+          description: key as timestamp
+      responses:
+        '200':
+          description: api.explorer.unregister_contrain
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+      produces:
+        - application/json
+
   "/genCode":
     get:
       description: Register topic for pub
@@ -50,7 +149,7 @@ paths:
           description: dest
         - in: query
           name: ttype
-          default: "qi.sun@cybex.io"
+          default: 1
           type: integer
           required: true
           description: 0->email, 1->phone
@@ -132,7 +231,7 @@ paths:
           required: true
           description: JSON you want to get
           schema:
-            $ref: '#/definitions/Post'
+            $ref: '#/definitions/KYCCREATE'
       responses:
         '200':
           description: kycCreate
@@ -158,6 +257,12 @@ paths:
           type: string
           required: true
           description: account to rmv
+        - in: query
+          name: signature
+          default: "*"
+          type: string
+          required: true
+          description: signature
       responses:
         '200':
           description: remove from kyc
@@ -183,7 +288,7 @@ paths:
           required: true
           description: JSON you want to get
           schema:
-            $ref: '#/definitions/Post'
+            $ref: '#/definitions/KYCUPDATE'
       responses:
         '200':
           description: update kyc
@@ -220,10 +325,10 @@ paths:
         - application/json
 
 
-  "/register":
+  "/register_acct":
     post:
       description: Register topic for pub
-      operationId: api.explorer.register
+      operationId: api.explorer.register_acct
       parameters:
         - in: body
           name: obj
@@ -243,65 +348,32 @@ paths:
         - api
 
 
-  "/is_sucess":
-    get:
-      description: Register topic for pub
-      operationId: api.explorer.is_success
-      parameters:
-        - in: query
-          name: account
-          required: true
-          type: string
-          description: account string
-        - in: query
-          name: accid
-          required: true
-          type: string
-          description: accid string
-      responses:
-        '200':
-          description: Registered
-        '500':
-          description: Error processing parameters
-      tags:
-        - api
-  "/finalize_kyc":
-    get:
-      description: Register topic for pub
-      operationId: api.explorer.finalize_kyc
-      parameters:
-        - in: query
-          name: account
-          required: true
-          type: string
-          description: account string
-      responses:
-        '200':
-          description: Registered
-        '500':
-          description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      tags:
-        - api
-
-
 
 definitions:
   Content:
     required:
       - name
+      - signature
       - email
-      - phone
+      - kyc_id
       - owner_key
       - active_key
       - memo_key
       - new
     properties:
+      signature:
+        type: string
+        description: a
       name:
         type: string
         description: a
       email:
+        type: string
+        description: a
+      kyc_id:
+        type: string
+        description: a
+      wechat:
         type: string
         description: a
       phone:
@@ -319,16 +391,52 @@ definitions:
       new:
         type: boolean
         description: a
-  Post:
+  KYCUPDATE:
     required:
-      - email
-      - phone
+      - signature
       - name
-      - accid
+      - kyc_id
     properties:
+      signature:
+        type: string
+        description: signature
+      kyc_id:
+        type: string
+        description: a
       email:
         type: string
         description: email
+      wechat:
+        type: string
+        description: phone
+      phone:
+        type: string
+        description: phone
+      name:
+        type: string
+        description: The account name
+      accid:
+        type: string
+        description: The account id
+
+  KYCCREATE:
+    required:
+      - signature
+      - name
+      - kyc_id
+    properties:
+      signature:
+        type: string
+        description: signature
+      kyc_id:
+        type: string
+        description: a
+      email:
+        type: string
+        description: email
+      wechat:
+        type: string
+        description: wechat
       phone:
         type: string
         description: phone

@@ -50,7 +50,8 @@
     ```
     * create collection kyc, add index:
     ```
-    > db.kyc.createIndex({'cybex_faucet_test.kyc':1})
+    > db.kyc.createIndex({'name':1, 'kyc_id':-1}, { unique: true } )
+
     > db.kyc.getIndexes()
     [
             {

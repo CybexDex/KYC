@@ -1,7 +1,7 @@
 import connexion
 
 options = {'swagger_url': '/apidocs'}
-app = connexion.FlaskApp('bitshares-explorer-api', options=options)
+app = connexion.FlaskApp('kyc-rest-backend-api', options=options)
 
 from flask_cors import CORS
 CORS(app.app)
