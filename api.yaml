@@ -11,7 +11,7 @@ produces:
 paths:
   "/register_constrain":
     get:
-      description: Register topic for pub
+      description: api.explorer.register_constrain
       operationId: api.explorer.register_constrain
       parameters:
         - in: query
@@ -19,7 +19,13 @@ paths:
           default: "email"
           type: string
           required: true
-          description: schemas saparate with ,
+          description: separated by ,
+        - in: query
+          name: kyc_id
+          default: "1234"
+          type: string
+          required: true
+          description: timestamp as key
       responses:
         '200':
           description: schema
@@ -115,7 +121,7 @@ paths:
       parameters:
         - in: query
           name: account
-          default: "nathan"
+          default: "sunxiaoqi-11"
           type: string
           required: true
           description: account
@@ -197,6 +203,37 @@ paths:
         - api
       produces:
         - application/json
+  "/getKYC_golden":
+    get:
+      description: Register topic for pub
+      operationId: api.explorer.getKYC_golden
+      parameters:
+        - in: query
+          name: account
+          default: "sunxiaoqi-11"
+          type: string
+          required: true
+          description: account 
+        - in: query
+          name: signature
+          default: "203148e0a9749808f99818d779210bd5f305699d7b4fc09cacdd43322e5a783e2946a149c0549078fbcc2e7da0c92c74c6eb179cf7152c5879b29e9c09c2386c31"
+          type: string
+          required: true
+          description: sig
+      responses:
+        '200':
+          description: getKYC
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+      produces:
+        - application/json
+
   "/getKYC":
     get:
       description: Register topic for pub
@@ -204,10 +241,16 @@ paths:
       parameters:
         - in: query
           name: account
-          default: "nathan"
+          default: "sunxiaoqi-11"
           type: string
           required: true
           description: account 
+        - in: query
+          name: signature
+          default: "203148e0a9749808f99818d779210bd5f305699d7b4fc09cacdd43322e5a783e2946a149c0549078fbcc2e7da0c92c74c6eb179cf7152c5879b29e9c09c2386c31"
+          type: string
+          required: true
+          description: sig
       responses:
         '200':
           description: getKYC
@@ -253,13 +296,13 @@ paths:
       parameters:
         - in: query
           name: account
-          default: "nathan"
+          default: "sunxiaoqi-11"
           type: string
           required: true
           description: account to rmv
         - in: query
           name: signature
-          default: "*"
+          default: "203148e0a9749808f99818d779210bd5f305699d7b4fc09cacdd43322e5a783e2946a149c0549078fbcc2e7da0c92c74c6eb179cf7152c5879b29e9c09c2386c31"
           type: string
           required: true
           description: signature
@@ -310,7 +353,7 @@ paths:
       parameters:
         - in: query
           name: account
-          default: "nathan"
+          default: "sunxiaoqi-11"
           type: string
           required: true
           description: account to rmv
@@ -395,7 +438,6 @@ definitions:
     required:
       - signature
       - name
-      - kyc_id
     properties:
       signature:
         type: string
@@ -434,7 +476,22 @@ definitions:
       email:
         type: string
         description: email
-      wechat:
+      date:
+        type: string
+        description: wechat
+      token:
+        type: string
+        description: wechat
+      refer:
+        type: string
+        description: wechat
+      coinAge:
+        type: string
+        description: wechat
+      wechat_name:
+        type: string
+        description: wechat
+      wechat_id:
         type: string
         description: wechat
       phone:

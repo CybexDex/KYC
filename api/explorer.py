@@ -60,7 +60,7 @@ try:
 except:
     print('failed to add key')
 
-constrain_dict = {}
+# constrain_dict = {}
 
 _token = '12345678'
 smtpObj = smtplib.SMTP(host = '127.0.0.1',  timeout = 26)
@@ -118,9 +118,36 @@ def verifyCode(code, account):
     qconn.close()
     return res
 
-def getKYC(account):
+def getKYC_golden(account, signature):
+    obj = {}
+    obj['account'] = account
+    obj['signature'] = signature
+    if verify_tx(obj):
+        logger.info('pass')
+    else:
+        logger.error('verify failed')
+        return {'msg':'failed to read, as wrong signature!'}
     try:
-        res = list(db.kyc.find({ "name" : account} , {'_id': False}))[0]
+        res = list(db.golden.find({ "name" : account} , {'_id': False}))
+    except:
+        logger.error("get golden KYC failed when query " + account)
+        return None
+    if len(res) == 0:
+        return None
+    return res
+
+
+def getKYC(account, signature):
+    obj = {}
+    obj['account'] = account
+    obj['signature'] = signature
+    if verify_tx(obj):
+        logger.info('pass')
+    else:
+        logger.error('verify failed')
+        return {'msg':'failed to read, as wrong signature!'}
+    try:
+        res = list(db.kyc.find({ "name" : account} , {'_id': False}))
     except:
         logger.error("getKYC failed when query " + account)
         return None
@@ -138,7 +165,8 @@ def kycCreate(data):
     else:
         logger.error('verify failed')
         return {'msg':'cant create'}
-    if len(constrain_dict) == 0 :
+    constrain_data = list(db.schemas.find())
+    if len(constrain_data) == 0 :
         return {'msg':'invalid as no constrain found for ' + data['name']}
     else:
         kyc_id = data['kyc_id']
@@ -146,11 +174,20 @@ def kycCreate(data):
             return {'msg':'failed when checking constrain'}
     try:
         db.kyc.insert_one(data )
-        return {}
     except:
-        logger.error("failed to insert " + str(data) )
+        logger.error("failed to insert kyc" + str(data) )
         logger.error(traceback.format_exc())
-        return {'msg':'failed to insert ' + data['name']}
+        return {'msg':'failed to insert kyc ' + data['name']}
+    for x in data.keys():
+        if x in ('name','signature', 'kyc_id'):
+            continue
+        tmp_ = data.get(x, "")
+        try:
+            db.golden.update_one( { "name" : data['name'] }, { '$set' : { x : tmp_} }, True)
+        except:
+            data.pop('_id')
+            return {'msg':'failed to insert mongodb golden table!\t' +  json.dumps(data)}
+    return {}
 
 
 def kycRmv(account, signature):
@@ -163,13 +200,14 @@ def kycRmv(account, signature):
         logger.error('verify failed')
         return {'msg':'cant remove'}
     try:
-        db.kyc.delete_one( { "name" : account })
+        db.kyc.delete_many( { "name" : account })
+        db.golden.delete_one( { "name" : account })
     except:
         logger.error()
         return {'msg':'failed to remove form mongodb.', 'err_code':1}
     return {}
 
-def kycUpd(data):
+def kycUpd(data): # only update on golden table
     obj = {}
     obj['account'] = data['name'] 
     obj['signature'] = data['signature'] 
@@ -179,14 +217,15 @@ def kycUpd(data):
         logger.error('verify failed')
         return {'msg':'cant update'}
     name = data['name']
-    kyc_id = data['kyc_id']
+    # kyc_id = data['kyc_id']
     for x in data.keys():
         if x in ('name','signature', 'kyc_id'):
             continue
         tmp_ = data.get(x, "")
         try:
-            db.kyc.update_one( { "name" : name, 'kyc_id': kyc_id }, { '$set' : { x : tmp_} })
+            db.golden.update_one( { "name" : name }, { '$set' : { x : tmp_} }, True )
         except:
+            logger.error(x + ':' + tmp_)
             return {'msg':'failed to update mongodb'}
     return {}
 
@@ -209,19 +248,29 @@ def register_naked(active, owner, memo, name):
     except:
         return {'msg':'account failed to register!', 'err_code':1}
 
-def register_constrain(schema):
+def register_constrain(schema, kyc_id):
     v = schema.split(',')
-    k = datetime.datetime.utcnow().strftime('%s')
-    constrain_dict[k] = v
-    logger.info(id(constrain_dict))
-    return k
+    if kyc_id == 'null':
+        kyc_id = datetime.datetime.utcnow().strftime('%s')
+    d = {}
+    d['schema'] = v
+    d['kyc_id'] = kyc_id
+    try: # db.schemas.createIndex({'kyc_id':1}, {unique:true})
+        db.schemas.insert_one(d)
+    except:
+        logger.error('kyc_id exists, please change your id')
+        return {'msg':'kyc_id exists, please change your id'}
+    # constrain_dict[k] = v
+    return kyc_id
 def unregister_contrain(k):
-    constrain_dict.pop(k)
+    db.schemas.delete_one({'kyc_id':k})
+    # constrain_dict.pop(k)
     return {}
     
 def _constrain(obj, kyc_id):
     try:
-        conts = set(constrain_dict[kyc_id])
+        #conts = set(constrain_dict[kyc_id])
+        conts = set(list(db.schemas.find({'kyc_id':kyc_id}))[0]['schema'])
     except:
         return False
     if len(conts & set(obj.keys())) == len(conts):
@@ -230,8 +279,12 @@ def _constrain(obj, kyc_id):
 
 def view_constrains(token):
     if token == _token:
-        logger.info(id(constrain_dict))
-        return constrain_dict
+        try:
+            res = list(db.schemas.find({}, {'_id': False}))
+            return res
+        except:
+            return {'msg':'error mongo!'}
+        # return constrain_dict
     else:
         return {'msg':'error token'}
 
