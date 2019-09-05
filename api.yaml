@@ -19,7 +19,7 @@ paths:
           default: "email"
           type: string
           required: true
-          description: separated by ,
+          description: you can't select a required field(like signature ), only optional fields can be set into; fileds are separated by ,
         - in: query
           name: kyc_id
           default: "1234"
@@ -37,6 +37,36 @@ paths:
         - api
       produces:
         - application/json
+  "/debug_verify_tx":
+    get:
+      description: Register topic for pub
+      operationId: api.explorer.debug_verify_tx
+      parameters:
+        - in: query
+          name: account
+          default: "sunxiaoqi-11"
+          type: string
+          required: true
+          description: account name to create
+        - in: query
+          name: sig
+          default: "111"
+          type: string
+          required: true
+          description: sig
+      responses:
+        '200':
+          description: debug sig
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+        - debug
+      produces:
+        - application/json
+
 
   "/build_tx":
     get:
@@ -57,13 +87,14 @@ paths:
           description: priv key
       responses:
         '200':
-          description: view_constrains
+          description: debug sig
         '500':
           description: Error processing parameters
           schema:
             $ref: '#/definitions/ErrorResponse'
       tags:
         - api
+        - debug
       produces:
         - application/json
 
@@ -88,6 +119,7 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       tags:
         - api
+        - kyc
       produces:
         - application/json
 
@@ -134,6 +166,7 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       tags:
         - api
+        - verify
       produces:
         - application/json
   "/sendVerifyCode":
@@ -170,6 +203,7 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       tags:
         - api
+        - verify
       produces:
         - application/jso
 
@@ -201,6 +235,7 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       tags:
         - api
+        - verify
       produces:
         - application/json
   "/getKYC_golden":
@@ -231,6 +266,7 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       tags:
         - api
+        - kyc
       produces:
         - application/json
 
@@ -262,6 +298,7 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       tags:
         - api
+        - kyc
       produces:
         - application/json
   "/kycCreate":
@@ -286,6 +323,7 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       tags:
         - api
+        - kyc
       produces:
         - application/json
 
@@ -317,6 +355,7 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       tags:
         - api
+        - kyc
       produces:
         - application/json
 
@@ -343,6 +382,7 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       tags:
         - api
+        - kyc
       produces:
         - application/json
 
@@ -364,6 +404,7 @@ paths:
           description: Error processing parameters
       tags:
         - api
+        - chain
       produces:
         - application/json
 
@@ -389,10 +430,267 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       tags:
         - api
+        - faucet
+        - kyc
+
+
+
+
+  "/get_eto_subscription":
+    get:
+      description: api.explorer.get_eto_subscription
+      operationId: api.explorer.get_eto_subscription
+      parameters:
+        - in: query
+          name: eto_id
+          default: "1"
+          type: string
+          required: true
+          description: jdajidaoi
+        - in: query
+          name: account
+          default: "1.2.123"
+          type: string
+          required: true
+          description: account
+      responses:
+        '200':
+          description: get_eto_subscription
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+        - eto_form
+      produces:
+        - application/json
+
+
+  "/get_survey":
+    get:
+      description: api.explorer.get_survey
+      operationId: api.explorer.get_survey
+      parameters:
+        - in: query
+          name: eto_id
+          default: "1"
+          type: string
+          required: true
+          description: jdajidaoi
+        - in: query
+          name: account
+          default: "1.2.123"
+          type: string
+          required: true
+          description: account
+      responses:
+        '200':
+          description: get survey
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+        - eto_form
+      produces:
+        - application/json
+
+
+
+  "/eto_subscription":
+    post:
+      description: Register topic for pub
+      operationId: api.explorer.eto_subscription 
+      parameters:
+        - in: body
+          name: obj
+          required: true
+          schema:
+            $ref: '#/definitions/Subscription'
+      responses:
+        '200':
+          description: subscription stored
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+        - eto_form
+
+
+
+  "/update_eto_subscription":
+    post:
+      description: Register topic for pub
+      operationId: api.explorer.update_eto_subscription
+      parameters:
+        - in: body
+          name: obj
+          required: true
+          schema:
+            $ref: '#/definitions/Subscription'
+      responses:
+        '200':
+          description: subscription stored
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+        - eto_form
+
+
+
+  "/rmv_eto_subscription":
+    get:
+      description: api.explorer.rmv_eto_subscription
+      operationId: api.explorer.rmv_eto_subscription
+      parameters:
+        - in: query
+          name: eto_id
+          default: "1"
+          type: string
+          required: true
+          description: jdajidaoi
+        - in: query
+          name: account
+          default: "1.2.123"
+          type: string
+          required: true
+          description: account
+      responses:
+        '200':
+          description: rmv_eto_subscription
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+        - eto_form
+
+  "/survey":
+    post:
+      description: Register topic for pub
+      operationId: api.explorer.survey
+      parameters:
+        - in: body
+          name: obj
+          required: true
+          schema:
+            $ref: '#/definitions/Survey'
+      responses:
+        '200':
+          description: Survey stored
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+        - eto_form
+  "/rmv_survey":
+    get:
+      description: api.explorer.rmv_survey
+      operationId: api.explorer.rmv_survey
+      parameters:
+        - in: query
+          name: eto_id
+          default: "1"
+          type: string
+          required: true
+          description: jdajidaoi
+        - in: query
+          name: account
+          default: "1.2.123"
+          type: string
+          required: true
+          description: account
+      responses:
+        '200':
+          description: remove survey
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+        - eto_form
+      produces:
+        - application/json
+
+  "/get_accounts_by_kyc":
+    get:
+      description: api.explorer.get_accounts_by_kyc
+      operationId: api.explorer.get_accounts_by_kyc
+      parameters:
+        - in: query
+          name: kyc_id
+          default: "1"
+          type: string
+          required: true
+          description: eto id
+      responses:
+        '200':
+          description: eto_id
+        '500':
+          description: Error processing parameters
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - api
+        - eto_form
+        - kyc
+
 
 
 
 definitions:
+  Subscription:
+    required:
+      - eto_id
+      - account
+      - symbol
+      - asset_id
+    properties:
+      eto_id:
+        type: string
+        description: a
+      asset_id:
+        type: string
+        description: a
+      symbol:
+        type: string
+        description: a
+      account:
+        type: string
+        description: a
+
+  Survey:
+    required:
+      - eto_id
+      - questionnaire
+      - account
+    properties:
+      eto_id:
+        type: string
+        description: a
+      questionnaire:
+        type: string
+        description: a
+      account:
+        type: string
+        description: a
   Content:
     required:
       - name
@@ -472,22 +770,28 @@ definitions:
         description: signature
       kyc_id:
         type: string
-        description: a
+        description: kyc_id
       email:
         type: string
         description: email
       date:
         type: string
-        description: wechat
+        description: date
+      submitted:
+        type: boolean
+        description: submitted 
+      recommend:
+        type: string
+        description: recommend
       token:
         type: string
-        description: wechat
+        description: token
       refer:
         type: string
-        description: wechat
+        description: refer
       coinAge:
         type: string
-        description: wechat
+        description: coinAge
       wechat_name:
         type: string
         description: wechat

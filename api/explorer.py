@@ -164,7 +164,7 @@ def kycCreate(data):
         data.pop('signature')
     else:
         logger.error('verify failed')
-        return {'msg':'cant create'}
+        return {'msg':'can not create'}
     constrain_data = list(db.schemas.find())
     if len(constrain_data) == 0 :
         return {'msg':'invalid as no constrain found for ' + data['name']}
@@ -186,6 +186,7 @@ def kycCreate(data):
             db.golden.update_one( { "name" : data['name'] }, { '$set' : { x : tmp_} }, True)
         except:
             data.pop('_id')
+            logger.error(json.dumps(data) + "\t failed at "+ x)
             return {'msg':'failed to insert mongodb golden table!\t' +  json.dumps(data)}
     return {}
 
@@ -198,7 +199,7 @@ def kycRmv(account, signature):
         logger.info('pass')
     else:
         logger.error('verify failed')
-        return {'msg':'cant remove'}
+        return {'msg':'can not remove'}
     try:
         db.kyc.delete_many( { "name" : account })
         db.golden.delete_one( { "name" : account })
@@ -215,7 +216,7 @@ def kycUpd(data): # only update on golden table
         logger.info('pass')
     else:
         logger.error('verify failed')
-        return {'msg':'cant update'}
+        return {'msg':'can not update'}
     name = data['name']
     # kyc_id = data['kyc_id']
     for x in data.keys():
@@ -289,23 +290,24 @@ def view_constrains(token):
         return {'msg':'error token'}
 
 def build_tx(account, WIF):
-    op = Tx(**{
-            'account': account,
-        })
-    message = bytes(op)
-    digest = hashlib.sha256(message).digest()
+    message = account
     signature = Signature(sign_message(message, WIF))
-    d = op.json()
+    # signature2 = Signature(sign_message(account, WIF))
+    # logger.info(hexlify(signature2.data).decode('ascii'))
+    d = {'account':account}
     d['signature'] = hexlify(signature.data).decode('ascii')
     return d
+
+def debug_verify_tx(sig, account):
+    d = {'signature':sig, 'account':account}
+    return verify_tx(d)
 
 def verify_tx(d):
     sig = d['signature']
     name = d['account']
     account = cybex.account.Account(name , cybex_instance = inst)
     del d['signature']
-    op = Tx(**d)
-    message = bytes(op)
+    message = name
     p = verify_message(message, unhexlify(sig))
     pkey = PublicKey(hexlify(p).decode('ascii'), prefix = 'CYB')
     # return str(pkey)
@@ -313,6 +315,7 @@ def verify_tx(d):
     if str(pkey) == _pubkey:
         return True
     return False
+
 
 def register_acct(obj ):
     is_create = obj['new']
@@ -369,6 +372,96 @@ def finalize_kyc(account):
     else:
         logger.info(rsp2)
         return None
+
+
+
+#######################  ETO RELATED BELOW #######################
+# db.survey.createIndex({'eto_id':1, 'account':1},{ unique: true })
+# db.eto_subscription.createIndex({'eto_id':1, 'account':1},{ unique: true })
+
+def get_survey(eto_id, account):
+    try:
+        res = list(db.survey.find({'eto_id':eto_id,'account':account}))[0]
+        res.pop('_id')
+    except:
+        return {'err_msg':'faile to fetch from survey'}
+    return res
+
+def survey(obj ):
+    d = obj.copy()
+    try:
+        db.survey.insert_one(d)
+    except:
+        return {'err_msg':'faile to insert survey'}
+    return {'msg':'succeed'}
+
+
+def rmv_survey(eto_id, account):
+    try:
+        db.survey.delete_one({'account':account, 'eto_id':eto_id })
+    except:
+        return {'err_msg':'faile to delete survey'}
+    return {'msg':'succeed'}
+
+def get_eto_subscription(eto_id, account):
+    try:
+        res = list(db.eto_subscription.find({'eto_id':eto_id,'account':account}))[0]
+        res.pop('_id')
+    except:
+        return {'err_msg':'faile to fetch from survey'}
+    return res
+
+def eto_subscription(obj ):
+    d = obj.copy()
+    try:
+        db.eto_subscription.insert_one(d)
+    except:
+        return {'err_msg':'faile to insert survey'}
+    return {'msg':'succeed'}
+
+
+def rmv_eto_subscription(eto_id,account):
+    d = obj.copy()
+    try:
+        db.eto_subscription.delete_one({'eto_id':eto_id,'account':account})
+    except:
+        return {'err_msg':'faile to delete survey'}
+    return {'msg':'succeed'}
+
+
+def update_eto_subscription(obj ):
+    d = obj.copy()
+    account = d['account']
+    eto_id = d['eto_id']
+    new_asset = d['asset_id']
+    new_symbol = d['symbol']
+    try:
+        db.eto_subscription.update_one({'eto_id':eto_id,'account':account},{'$set' : { 'asset_id' : new_asset, 'symbol':new_symbol }},True)
+    except:
+        return {'err_msg':'faile to update survey'}
+    return {'msg':'succeed'}
+
+
+
+# db.eto_subscription.createIndex({'eto_id':1})
+def get_accounts_by_kyc(kyc_id):
+    res = []
+    try:
+        it = db.kyc.find({'kyc_id':kyc_id})
+        for i in it:
+            accid = i.get('accid',None)
+            if accid is None:
+                logger.error('accid is null, will use account name as a replacement.')
+                accid = i.get('name', None)
+                if accid is None:
+                    logger.error('panic as name is null, not expected! ')
+                    continue
+            res.append(accid) 
+    except:
+        logger.error('failed to get accounts by eto subscription:' + str(kyc_id))
+    return res
+
+
 
 
 
