@@ -81,7 +81,10 @@ class Tx(GrapheneObject):
 
 
 def genCode(account):
-    qconn =  q3.q(host = config.Q_HOST, port = config.Q_PORT, user = config.Q_USER)
+    try:
+        qconn =  q3.q(host = config.Q_HOST, port = config.Q_PORT, user = config.Q_USER)
+    except:
+        return {'err':'can not connect to q server'}
     sql = 'genCode["%s"]'% (account)
     try:
         res = qconn.k3(str(sql))
@@ -107,7 +110,10 @@ def sendVerifyCode(code, dest, ttype):
     return 'ttype not supported!'
 
 def verifyCode(code, account):
-    qconn =  q3.q(host = config.Q_HOST, port = config.Q_PORT, user = config.Q_USER)
+    try:
+        qconn =  q3.q(host = config.Q_HOST, port = config.Q_PORT, user = config.Q_USER)
+    except:
+        return {'err':'can not connect to q server'}
     sql = 'verifyCode[`%s;"%s"]' % (code, account)
     try:
         res = bool(qconn.k3(str(sql)))
