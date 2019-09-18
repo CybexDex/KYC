@@ -184,6 +184,7 @@ def kycCreate(data):
         logger.error("failed to insert kyc" + str(data) )
         logger.error(traceback.format_exc())
         return {'msg':'failed to insert kyc ' + data['name']}
+    data.pop('_id')
     for x in data.keys():
         if x in ('name','signature', 'kyc_id'):
             continue
@@ -191,7 +192,6 @@ def kycCreate(data):
         try:
             db.golden.update_one( { "name" : data['name'] }, { '$set' : { x : tmp_} }, True)
         except:
-            data.pop('_id')
             logger.error(json.dumps(data) + "\t failed at "+ x)
             return {'msg':'failed to insert mongodb golden table!\t' +  json.dumps(data)}
     return {}
