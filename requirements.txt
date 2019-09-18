@@ -27,4 +27,4 @@ pandas
 flatten_json
 connexion[swagger-ui]
 jsonify
-
+PyCybex
