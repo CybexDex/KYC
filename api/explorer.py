@@ -427,7 +427,6 @@ def eto_subscription(obj ):
 
 
 def rmv_eto_subscription(eto_id,account):
-    d = obj.copy()
     try:
         db.eto_subscription.delete_one({'eto_id':eto_id,'account':account})
     except:
