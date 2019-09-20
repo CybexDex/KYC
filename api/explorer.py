@@ -311,10 +311,18 @@ def debug_verify_tx(sig, account):
 def verify_tx(d):
     sig = d['signature']
     name = d['account']
-    account = cybex.account.Account(name , cybex_instance = inst)
+    try:
+        account = cybex.account.Account(name , cybex_instance = inst)
+    except:
+        logger.error('account [%s] not found from chain'%(name))
+        return False
     del d['signature']
     message = name
-    p = verify_message(message, unhexlify(sig))
+    try:
+        p = verify_message(message, unhexlify(sig))
+    except:
+        logger.error('verify_message failed')
+        return False
     pkey = PublicKey(hexlify(p).decode('ascii'), prefix = 'CYB')
     # return str(pkey)
     _pubkey = account['active']['key_auths'][0][0]

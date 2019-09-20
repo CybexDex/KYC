@@ -31,8 +31,6 @@ paths:
           description: schema
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
       produces:
@@ -59,8 +57,6 @@ paths:
           description: debug sig
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - debug
@@ -90,8 +86,6 @@ paths:
           description: debug sig
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - debug
@@ -115,8 +109,6 @@ paths:
           description: view_constrains
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - kyc
@@ -139,8 +131,6 @@ paths:
           description: api.explorer.unregister_contrain
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
       produces:
@@ -162,8 +152,6 @@ paths:
           description: genCode
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - verify
@@ -195,12 +183,8 @@ paths:
       responses:
         '200':
           description: sendVerifyCode
-          schema:
-            $ref: '#/definitions/SuccessResponse'
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - verify
@@ -227,12 +211,8 @@ paths:
       responses:
         '200':
           description: verifyCode
-          schema:
-            $ref: '#/definitions/SuccessResponse'
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - verify
@@ -258,12 +238,8 @@ paths:
       responses:
         '200':
           description: getKYC
-          schema:
-            $ref: '#/definitions/SuccessResponse'
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - kyc
@@ -290,12 +266,8 @@ paths:
       responses:
         '200':
           description: getKYC
-          schema:
-            $ref: '#/definitions/SuccessResponse'
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - kyc
@@ -315,12 +287,8 @@ paths:
       responses:
         '200':
           description: kycCreate
-          schema:
-            $ref: '#/definitions/SuccessResponse'
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - kyc
@@ -347,12 +315,8 @@ paths:
       responses:
         '200':
           description: remove from kyc
-          schema:
-            $ref: '#/definitions/SuccessResponse'
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - kyc
@@ -374,12 +338,8 @@ paths:
       responses:
         '200':
           description: update kyc
-          schema:
-            $ref: '#/definitions/SuccessResponse'
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - kyc
@@ -422,8 +382,6 @@ paths:
       responses:
         '200':
           description: Registered
-          schema:
-            $ref: '#/definitions/SuccessResponse'
         '500':
           description: Error processing parameters
           schema:
@@ -458,8 +416,6 @@ paths:
           description: get_eto_subscription
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - eto_form
@@ -489,8 +445,6 @@ paths:
           description: get survey
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - eto_form
@@ -512,12 +466,8 @@ paths:
       responses:
         '200':
           description: subscription stored
-          schema:
-            $ref: '#/definitions/SuccessResponse'
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - eto_form
@@ -537,12 +487,8 @@ paths:
       responses:
         '200':
           description: subscription stored
-          schema:
-            $ref: '#/definitions/SuccessResponse'
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - eto_form
@@ -571,8 +517,6 @@ paths:
           description: rmv_eto_subscription
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - eto_form
@@ -590,12 +534,8 @@ paths:
       responses:
         '200':
           description: Survey stored
-          schema:
-            $ref: '#/definitions/SuccessResponse'
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - eto_form
@@ -621,8 +561,6 @@ paths:
           description: remove survey
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - eto_form
@@ -645,8 +583,6 @@ paths:
           description: eto_id
         '500':
           description: Error processing parameters
-          schema:
-            $ref: '#/definitions/ErrorResponse'
       tags:
         - api
         - eto_form
