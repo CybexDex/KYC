@@ -11,6 +11,7 @@ from bson.objectid import ObjectId
 import traceback,os
 import smtplib
 from services import qmail
+from services import ali_files as af
 
 
 import json
@@ -269,8 +270,12 @@ def register_constrain(schema, kyc_id):
         return {'msg':'kyc_id exists, please change your id'}
     # constrain_dict[k] = v
     return kyc_id
-def unregister_contrain(k):
-    db.schemas.delete_one({'kyc_id':k})
+def unregister_constrain(k):
+    try:
+        db.schemas.delete_one({'kyc_id':k})
+    except:
+        logger.error('failed when delete from table schemas')
+        return {'err_msg':'error when handle schemas table'}
     # constrain_dict.pop(k)
     return {}
     
@@ -441,6 +446,19 @@ def rmv_eto_subscription(eto_id,account):
         return {'err_msg':'faile to delete survey'}
     return {'msg':'succeed'}
 
+def upload_eto_info(account, obj):
+    filename = obj['filename']
+    content = obj['content']
+    filename = filename.strip().split('/')[0]
+    timestamp = datetime.datetime.utcnow().strftime('%s')
+    i = af.CybexKYCFilesLocate(config.AccessKeyr_ID, config.AccessKeySecret, config.ENDPOINT, config.BUCKET_NAME)
+    obj_name = account + '/' + timestamp + '-'  + filename
+    try:
+        i.upload_str(obj_name, content)
+    except Exception as e:
+        logger.error(e)
+        return {'err_msg': 'failed to upload'}
+    return {'location':obj_name}
 
 def update_eto_subscription(obj ):
     d = obj.copy()

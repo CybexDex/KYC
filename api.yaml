@@ -33,6 +33,7 @@ paths:
           description: Error processing parameters
       tags:
         - api
+        - kyc
       produces:
         - application/json
   "/debug_verify_tx":
@@ -115,10 +116,10 @@ paths:
       produces:
         - application/json
 
-  "/unregister_contrain":
+  "/unregister_constrain":
     get:
-      description: Register topic for pub
-      operationId: api.explorer.unregister_contrain
+      description: api.explorer.unregister_constrain
+      operationId: api.explorer.unregister_constrain
       parameters:
         - in: query
           name: k
@@ -128,11 +129,12 @@ paths:
           description: key as timestamp
       responses:
         '200':
-          description: api.explorer.unregister_contrain
+          description: api.explorer.unregister_constrain
         '500':
           description: Error processing parameters
       tags:
         - api
+        - kyc
       produces:
         - application/json
 
@@ -474,6 +476,34 @@ paths:
 
 
 
+  "/upload_eto_info":
+    post:
+      description: Register topic for pub
+      operationId: api.explorer.upload_eto_info
+      parameters:
+        - in: query
+          name: account
+          default: "nathan"
+          type: string
+          required: true
+          description: account name
+        - in: body
+          name: obj
+          required: true
+          schema:
+            $ref: '#/definitions/Upload_eto'
+      responses:
+        '200':
+          description: subscription stored
+        '500':
+          description: Error processing parameters
+      tags:
+        - api
+        - eto_form
+
+
+
+
   "/update_eto_subscription":
     post:
       description: Register topic for pub
@@ -592,6 +622,20 @@ paths:
 
 
 definitions:
+  Upload_eto:
+    required:
+      - content
+      - filename
+    properties:
+      content:
+        type: string
+        description: a
+      filename:
+        type: string
+        description: file name
+      desc:
+        type: string
+        description: description
   Subscription:
     required:
       - eto_id
@@ -611,7 +655,10 @@ definitions:
       account:
         type: string
         description: a
-
+      file_locations:
+        type: string
+        description: dirs of files
+ 
   Survey:
     required:
       - eto_id
@@ -710,6 +757,9 @@ definitions:
       email:
         type: string
         description: email
+      files:
+        type: string
+        description: files location
       date:
         type: string
         description: date
@@ -743,6 +793,9 @@ definitions:
       accid:
         type: string
         description: The account id
+      hname:
+        type: string
+        description: human name
   SuccessResponse:
     required:
       - service

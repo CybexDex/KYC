@@ -47,3 +47,9 @@ ws_conn = 'ws://47.100.98.113:38090'
 passwd = '12345678'
 privk = '5KWTrrQMyD7Ez62viB36r75ur9ZJ6DPu3qkSa2eDcpE99XfD8ye'
 faucet_account = 'sunxiaoqi-01'
+
+AccessKeyr_ID = 'LTAI4FjsgBVYLauRYbCpjYoH'
+AccessKeySecret = '07qLC0zHZXwfz1nvt5gm7GgDz4t8rK'
+ENDPOINT='http://oss-cn-beijing.aliyuncs.com'
+BUCKET_NAME='candybull-ieo-kyc'
+
