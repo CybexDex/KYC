@@ -11,7 +11,7 @@ from bson.objectid import ObjectId
 import traceback,os
 import smtplib
 from services import qmail
-from services import ali_files as af
+from services import aws_file as af
 
 
 import json
@@ -184,7 +184,7 @@ def kycCreate(data):
     except:
         logger.error("failed to insert kyc" + str(data) )
         logger.error(traceback.format_exc())
-        return {'msg':'failed to insert kyc ' + data['name']}
+        return {'msg':'failed to insert kyc, one posstile cause is data already exists, please do not submit duplicate data under same kyc/eto id ' + data['name']}
     data.pop('_id')
     for x in data.keys():
         if x in ('name','signature', 'kyc_id'):
@@ -194,7 +194,7 @@ def kycCreate(data):
             db.golden.update_one( { "name" : data['name'] }, { '$set' : { x : tmp_} }, True)
         except:
             logger.error(json.dumps(data) + "\t failed at "+ x)
-            return {'msg':'failed to insert mongodb golden table!\t' +  json.dumps(data)}
+            return {'msg':'failed to insert mongodb golden table! Please check your data and ensure its fields follow the constrain set under your kyc/eto id: \t' +  json.dumps(data)}
     return {}
 
 
